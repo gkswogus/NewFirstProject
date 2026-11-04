@@ -52,5 +52,6 @@ public class CameraMove : MonoBehaviour
 
         // 플레이어 위치 따라가기
         transform.position = target.position;
+        //풀리퀘스트 테스트
     }
 }
