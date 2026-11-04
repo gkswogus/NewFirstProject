@@ -1,0 +1,11 @@
+﻿.vs
+TestP.slnx
+.vsconfig
+Assembly-CSharp.csproj
+Assembly-CSharp-Editor.csproj
+com.unity.animations.springbone.csproj
+com.unity.animations.springbone.editor.csproj
+Library
+Logs
+Temp
+UserSettings
