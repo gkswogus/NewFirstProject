@@ -1,4 +1,5 @@
 using Unity.AppUI.Redux;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
@@ -28,5 +29,9 @@ public class SceneLoader : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
+    }
+    public void GameExit()
+    {
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 }
