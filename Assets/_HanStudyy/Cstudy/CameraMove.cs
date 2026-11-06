@@ -22,16 +22,23 @@ public class CameraMove : MonoBehaviour
     }
     private void Update()
     {
-        if (menu.activeSelf == true)
+        if (menu == null)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            return;
+        }
+
+        if (menu.activeSelf)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-        else 
+        else
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-        }    
+        }
     }
 
     void LateUpdate()

@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -6,6 +8,11 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 3.0f;
     public float runSpeed = 6.0f;
     public float rotationSpeed = 10.0f;
+
+    [Header("Input Actions")]
+    public InputActionReference moveAction;
+    public InputActionReference runAction;
+    public InputActionReference attackAction;
 
     [Header("컴포넌트")]
     public Rigidbody rb;
@@ -16,11 +23,29 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed;
     private float animSpeed;
 
+    private void OnEnable()
+    {
+        moveAction.action.Enable();
+        runAction.action.Enable();
+        attackAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        moveAction.action.Disable();
+        runAction.action.Disable();
+        attackAction.action.Disable();
+    }
+
     void Update()
     {
         if (cameraTransform == null) return;
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+
+        // 이동 입력 받기
+        Vector2 inputVector = moveAction.action.ReadValue<Vector2>();
+
+        float horizontal = inputVector.x;
+        float vertical = inputVector.y;
 
         // 카메라의 수평 방향 계산
         Vector3 cameraForward = cameraTransform.forward;
@@ -36,17 +61,23 @@ public class PlayerController : MonoBehaviour
         moveDirection =
             (cameraForward * vertical + cameraRight * horizontal).normalized;
 
-        bool isRunning =
-            Input.GetKey(KeyCode.LeftShift) ||
-            Input.GetKey(KeyCode.RightShift);
+        // 달리기 입력
+        bool isRunning = runAction.action.IsPressed();
 
         currentSpeed = isRunning ? runSpeed : walkSpeed;
 
+        // 애니메이션 속도 설정
         animSpeed = moveDirection.magnitude > 0.01f
             ? (isRunning ? 1f : 0.5f)
             : 0f;
 
         ani.SetFloat("Speed", animSpeed, 0.1f, Time.deltaTime);
+
+        // 공격 입력
+        if (attackAction.action.WasPressedThisFrame())
+        {
+            ani.SetTrigger("Attack");
+        }
     }
 
     void FixedUpdate()
@@ -75,4 +106,5 @@ public class PlayerController : MonoBehaviour
             rb.MoveRotation(newRotation);
         }
     }
+
 }
